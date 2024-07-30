@@ -1,0 +1,73 @@
+definitions:
+  entity.LoginDto:
+    properties:
+      idKey:
+        description: 验证码id
+        type: string
+      image:
+        description: 验证码
+        maxLength: 6
+        minLength: 4
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - idKey
+    - image
+    - password
+    - username
+    type: object
+  result.Result:
+    properties:
+      code:
+        description: 状态码
+        type: integer
+      data:
+        description: 返回的数据
+      msg:
+        description: 提示信息
+        type: string
+    type: object
+info:
+  contact: {}
+  description: 后台管理系统API接口文档
+  title: admin-go-api
+  version: "1.0"
+paths:
+  /api/captcha:
+    get:
+      description: 验证码接口
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/result.Result'
+      summary: 验证码接口
+  /api/login:
+    post:
+      description: 用户登录接口
+      parameters:
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entity.LoginDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/result.Result'
+      summary: 用户登录接口
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

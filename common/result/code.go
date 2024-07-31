@@ -14,6 +14,8 @@ type Codes struct {
 	PASSWORDNOTTRUE    uint
 	STATUSISENABLE     uint
 	USERDISABLED       uint
+	DatabaseError      uint
+	INVALIDTOKEN       uint
 }
 
 // ApiCode 状态码
@@ -28,6 +30,8 @@ var ApiCode = &Codes{
 	PASSWORDNOTTRUE:    410,
 	STATUSISENABLE:     411,
 	USERDISABLED:       412,
+	DatabaseError:      413,
+	INVALIDTOKEN:       414,
 }
 
 // 状态信息
@@ -35,14 +39,16 @@ func init() {
 	ApiCode.Message = map[uint]string{
 		ApiCode.SUCCESS:            "成功",
 		ApiCode.FAILED:             "失败",
-		ApiCode.NOAUTH:             "请求头中auth为空",
-		ApiCode.AUTHFORM:           "请求头中auth格式有误",
+		ApiCode.NOAUTH:             "请求头中token为空",
+		ApiCode.AUTHFORM:           "请求头中token格式有误",
 		ApiCode.MissingLoginParams: "缺少登录参数",
 		ApiCode.LoginCodeExpire:    "验证码已过期",
 		ApiCode.CAPTCHANOTTRUE:     "验证码错误",
 		ApiCode.PASSWORDNOTTRUE:    "密码错误",
 		ApiCode.STATUSISENABLE:     "状态启用",
 		ApiCode.USERDISABLED:       "用户已禁用",
+		ApiCode.DatabaseError:      "数据库错误",
+		ApiCode.INVALIDTOKEN:       "无效的token",
 	}
 }
 

@@ -56,5 +56,4 @@ func init() {
 	db.SetupDBLink()
 	//redis
 	redis.SetupRedisDB()
-
 }

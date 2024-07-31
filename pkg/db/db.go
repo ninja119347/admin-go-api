@@ -6,6 +6,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"time"
 )
 
 var Db *gorm.DB
@@ -35,5 +36,6 @@ func SetupDBLink() error {
 	sqlDB, _ := Db.DB()
 	sqlDB.SetMaxIdleConns(dbConfig.MaxIdle)
 	sqlDB.SetMaxOpenConns(dbConfig.MaxOpen)
+	sqlDB.SetConnMaxLifetime(10 * time.Second)
 	return nil
 }

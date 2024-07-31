@@ -1,5 +1,22 @@
 definitions:
-  entity.LoginDto:
+  dto.CreateUserDto:
+    properties:
+      depId:
+        type: integer
+      email:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      phone:
+        type: string
+      postId:
+        type: integer
+      username:
+        type: string
+    type: object
+  dto.LoginDto:
     properties:
       idKey:
         description: 验证码id
@@ -56,7 +73,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/entity.LoginDto'
+          $ref: '#/definitions/dto.LoginDto'
       produces:
       - application/json
       responses:
@@ -65,6 +82,24 @@ paths:
           schema:
             $ref: '#/definitions/result.Result'
       summary: 用户登录接口
+  /api/register:
+    post:
+      description: 新增用户接口
+      parameters:
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateUserDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/result.Result'
+      summary: 新增用户接口
 securityDefinitions:
   ApiKeyAuth:
     in: header

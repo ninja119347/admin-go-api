@@ -36,7 +36,24 @@ func InitRouter() *gin.Engine {
 
 // 路由注册
 func register(router *gin.Engine) {
+	// 需要 JWT 验证的路由组
+	auth := router.Group("/authJwt")
+	auth.Use(middleware.AuthMiddleware())
+	// 其他需要 JWT 验证的接口
+	auth.POST("/register", controller.AddUser)
+	auth.GET("/ping2", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
 	router.GET("/api/captcha", controller.Captcha)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.POST("/api/login", controller.Login)
+	router.GET("/ping1", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+	//router.POST("/api/register", controller.AddUser)
+
 }

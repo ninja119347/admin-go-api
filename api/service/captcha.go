@@ -3,6 +3,7 @@ package service
 
 import (
 	"admin-go-api/common/util"
+	"admin-go-api/pkg/log"
 	"github.com/mojocn/base64Captcha"
 	"image/color"
 )
@@ -31,8 +32,10 @@ func CaptMake() (id, ba64s string) {
 	}
 	driverString = captcharConfig
 	driver = driverString.ConvertFonts()
+	//，store 是 util.RedisStore 的实例，因此 Set 方法在生成验证码时被调用。
 	captcha := base64Captcha.NewCaptcha(driver, &store)
-	lid, lb64s, _, _ := captcha.Generate()
+	lid, lb64s, ans, _ := captcha.Generate()
+	log.Log().Info("生成验证码: ", ans)
 	return lid, lb64s
 }
 

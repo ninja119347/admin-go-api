@@ -18,6 +18,10 @@ import (
 type ISysAdminService interface {
 	Login(c *gin.Context, dto dto.LoginDto)
 	CreateUser(c *gin.Context, dto dto.CreateUserDto)
+	DeleteUser(c *gin.Context, id uint)
+	SearchUser(c *gin.Context, username string)
+	UpdateUser(c *gin.Context, dto dto.UpdateUserDto)
+	SearchUserAll(c *gin.Context)
 }
 
 type SysAdminServiceImpl struct{}
@@ -30,7 +34,7 @@ func (s SysAdminServiceImpl) Login(c *gin.Context, dto dto.LoginDto) {
 	err := validator.New().Struct(dto)
 	if err != nil {
 		fmt.Errorf("参数校验失败: %v", err)
-		result.Failed(c, uint(result.ApiCode.MissingLoginParams), result.ApiCode.GetMessage(result.ApiCode.MissingLoginParams))
+		result.Failed(c, uint(result.ApiCode.ParamsFormError), result.ApiCode.GetMessage(result.ApiCode.ParamsFormError))
 		return
 	}
 	//查看验证码是否过期
@@ -69,17 +73,66 @@ func (s SysAdminServiceImpl) CreateUser(c *gin.Context, dto dto.CreateUserDto) {
 	// 参数校验
 	err := validator.New().Struct(dto)
 	if err != nil {
-		result.Failed(c, uint(result.ApiCode.MissingLoginParams), "参数校验失败")
+		result.Failed(c, uint(result.ApiCode.ParamsFormError), result.ApiCode.GetMessage(result.ApiCode.ParamsFormError))
 		return
 	}
 	// 调用DAO层保存用户
 	if err := dao.CreateUser(dto); err != nil {
-		result.Failed(c, uint(result.ApiCode.DatabaseError), "数据库错误")
+		result.Failed(c, uint(result.ApiCode.DatabaseError), result.ApiCode.GetMessage(result.ApiCode.DatabaseError))
 		return
 	}
 	result.Success(c, map[string]interface{}{"data": dto})
 }
 
+// 实现删除用户接口
+func (s SysAdminServiceImpl) DeleteUser(c *gin.Context, id uint) {
+	// 调用DAO层删除用户
+	if err := dao.DeleteUser(id); err != nil {
+		result.Failed(c, uint(result.ApiCode.DeleteUserError), result.ApiCode.GetMessage(result.ApiCode.DeleteUserError))
+		return
+	}
+	result.Success(c, nil)
+
+}
+
+// 实现查询用户接口
+func (s SysAdminServiceImpl) SearchUser(c *gin.Context, username string) {
+	// 调用DAO层查询用户
+	user, err := dao.SearchUser(username)
+	if err != nil {
+		result.Failed(c, uint(result.ApiCode.UserNotExist), result.ApiCode.GetMessage(result.ApiCode.UserNotExist))
+		return
+	}
+	result.Success(c, map[string]interface{}{"data": user})
+}
+
+// 实现更新用户接口
+func (s SysAdminServiceImpl) UpdateUser(c *gin.Context, dto dto.UpdateUserDto) {
+	// 参数校验
+	errParam := validator.New().Struct(dto)
+	if errParam != nil {
+		result.Failed(c, uint(result.ApiCode.ParamsFormError), result.ApiCode.GetMessage(result.ApiCode.ParamsFormError))
+		return
+	}
+	//查询用户是否存在
+	_, err := dao.SearchUserById(dto.ID)
+	if err != nil {
+		result.Failed(c, uint(result.ApiCode.UserNotExist), result.ApiCode.GetMessage(result.ApiCode.UserNotExist))
+		return
+	}
+	// 调用DAO层更新用户
+	if err := dao.UpdateUser(dto); err != nil {
+		result.Failed(c, uint(result.ApiCode.UpdateUserError), result.ApiCode.GetMessage(result.ApiCode.UpdateUserError))
+		return
+	}
+	result.Success(c, map[string]interface{}{"data": dto})
+
+}
+
+// 实现查询所有用户接口
+func (s SysAdminServiceImpl) SearchUserAll(c *gin.Context) {
+	//TODO
+}
 func SysAdminService() ISysAdminService {
 	return &sysAdminServiceImpl
 }

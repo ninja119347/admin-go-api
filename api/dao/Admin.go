@@ -31,3 +31,31 @@ func CreateUser(dto dto.CreateUserDto) error {
 	}
 	return db.Db.Create(&user).Error
 }
+func SearchUser(username string) (user []entity.SysAdmin, err error) {
+
+	err = db.Db.Where("username = ?", username).Find(&user).Error
+	return user, err
+}
+
+func DeleteUser(id uint) error {
+	return db.Db.Where("id = ?", id).Delete(&entity.SysAdmin{}).Error
+}
+
+func UpdateUser(dto dto.UpdateUserDto) error {
+	user := entity.SysAdmin{
+		ID:       dto.ID,
+		Username: dto.Username,
+		//Password: dto.Password,
+		Email:  dto.Email,
+		Phone:  dto.Phone,
+		PostId: dto.PostId,
+		DepId:  dto.DepId,
+	}
+	return db.Db.Model(&entity.SysAdmin{}).Where("id = ?", dto.ID).Updates(&user).Error
+
+}
+
+func SearchUserById(id uint) (user entity.SysAdmin, err error) {
+	err = db.Db.Where("id = ?", id).Find(&user).Error
+	return user, err
+}

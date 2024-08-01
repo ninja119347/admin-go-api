@@ -10,11 +10,23 @@ type LoginDto struct {
 
 // 创建用户对象
 type CreateUserDto struct {
-	ID       uint   `json:"id" binding:"require"`
-	PostId   int    `json:"postId" binding:"require"`
-	DepId    int    `json:"depId" binding:"require"`
-	Username string `json:"username" binding:"require"`
-	Password string `json:"password" binding:"require"`
-	Email    string `json:"email" binding:"require,email"`
-	Phone    string `json:"phone" binding:"require"`
+	ID       uint   `json:"id" validate:"required"`
+	PostId   int    `json:"postId" `
+	DepId    int    `json:"depId" `
+	Username string `json:"username" validate:"required"`
+	Password string `json:"password" validate:"required"`
+	Email    string `json:"email" validate:"required,email"`
+	Phone    string `json:"phone" validate:"required"`
+}
+
+// 更新用户对象
+type UpdateUserDto struct {
+	ID       uint   `json:"id" validate:"required"`
+	PostId   int    `json:"postId"`
+	DepId    int    `json:"depId"`
+	Username string `json:"username"`
+	//TODO 可以单独做一个密码验证的方法
+	//Password string `json:"password" binding:"require"`
+	Email string `json:"email" validate:"email"`
+	Phone string `json:"phone"`
 }

@@ -76,11 +76,15 @@ func UpdateUser(c *gin.Context) {
 	service.SysAdminService().UpdateUser(c, dto)
 }
 
-// @Summary 查询所有用户接口
-// @Description 查询所有用户接口
+// @Summary 分页查询用户接口
+// @Description 分页查询用户接口
 // @Produce json
+// @Param page query int true "页码"
+// @Param pageSize query int true "每页数量"
 // @Success 200 {object} result.Result
-// @Router /api/user [get]
-func SearchUserAll(c *gin.Context) {
-	service.SysAdminService().SearchUserAll(c)
+// @Router /api/user/list [get]
+func SearchUserList(c *gin.Context) {
+	page, _ := strconv.Atoi(c.Query("page"))
+	pageSize, _ := strconv.Atoi(c.Query("pageSize"))
+	service.SysAdminService().SearchUserList(c, page, pageSize)
 }

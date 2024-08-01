@@ -21,7 +21,7 @@ type ISysAdminService interface {
 	DeleteUser(c *gin.Context, id uint)
 	SearchUser(c *gin.Context, username string)
 	UpdateUser(c *gin.Context, dto dto.UpdateUserDto)
-	SearchUserAll(c *gin.Context)
+	SearchUserList(c *gin.Context, page, pageSize int)
 }
 
 type SysAdminServiceImpl struct{}
@@ -52,7 +52,6 @@ func (s SysAdminServiceImpl) Login(c *gin.Context, dto dto.LoginDto) {
 	//校验用户
 	sysAdmin := dao.SysAdminDetail(dto)
 	if sysAdmin.Password != util.EncryptionMd5(dto.Password) {
-		log.Log().Errorf("密码错误, 密码: %s, 输入密码：%s", sysAdmin.Password, dto.Password)
 		result.Failed(c, uint(result.ApiCode.PASSWORDNOTTRUE), result.ApiCode.GetMessage(result.ApiCode.PASSWORDNOTTRUE))
 		return
 	}
@@ -129,15 +128,28 @@ func (s SysAdminServiceImpl) UpdateUser(c *gin.Context, dto dto.UpdateUserDto) {
 
 }
 
-// 实现查询所有用户接口
-func (s SysAdminServiceImpl) SearchUserAll(c *gin.Context) {
-	//TODO
+// 实现查询分页查询用户接口
+func (s SysAdminServiceImpl) SearchUserList(c *gin.Context, page, pageSize int) {
+	//检验参数
+	if page < 0 || pageSize < 0 {
+		result.Failed(c, uint(result.ApiCode.ParamsFormError), result.ApiCode.GetMessage(result.ApiCode.ParamsFormError))
+		return
+	}
+	if pageSize == 0 {
+		pageSize = -1
+	}
+	if page == 0 {
+		page = -1
+	}
+	// 调用DAO层查询用户
+	users, err := dao.SearchUserList(page, pageSize)
+	if err != nil {
+		result.Failed(c, uint(result.ApiCode.UserNotExist), result.ApiCode.GetMessage(result.ApiCode.UserNotExist))
+		return
+	}
+	result.Success(c, map[string]interface{}{"data": users})
 }
+
 func SysAdminService() ISysAdminService {
 	return &sysAdminServiceImpl
 }
-
-//type admin_info struct {
-//	Username string `json:"username"`
-//	Password string `json:"password"`
-//}

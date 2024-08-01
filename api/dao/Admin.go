@@ -59,3 +59,12 @@ func SearchUserById(id uint) (user entity.SysAdmin, err error) {
 	err = db.Db.Where("id = ?", id).Find(&user).Error
 	return user, err
 }
+
+func SearchUserList(page int, pageSize int) (userList []entity.SysAdmin, err error) {
+	offset := (page - 1) * pageSize
+	if page == -1 && pageSize == -1 {
+		offset = -1
+	}
+	err = db.Db.Model(&entity.SysAdmin{}).Limit(pageSize).Offset(offset).Find(&userList).Error
+	return userList, err
+}

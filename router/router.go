@@ -48,11 +48,12 @@ func register(router *gin.Engine) {
 		})
 	})
 	router.GET("/api/user/:username", controller.SearchUser)
-	router.GET("/api/user", controller.SearchUserAll)
+	//router.GET("/api/user", controller.SearchUserAll)
 	router.GET("/api/captcha", controller.Captcha)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	router.POST("/api/login", controller.Login)
 	router.PUT("/api/updateUser", controller.UpdateUser)
+	router.GET("/api/user/list", controller.SearchUserList)
 	router.GET("/ping1", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",

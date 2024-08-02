@@ -15,6 +15,12 @@ definitions:
         type: integer
       username:
         type: string
+    required:
+    - email
+    - id
+    - password
+    - phone
+    - username
     type: object
   dto.LoginDto:
     properties:
@@ -35,6 +41,26 @@ definitions:
     - image
     - password
     - username
+    type: object
+  dto.UpdateUserDto:
+    properties:
+      depId:
+        type: integer
+      email:
+        description: |-
+          TODO 可以单独做一个密码验证的方法
+          Password string `json:"password" binding:"require"`
+        type: string
+      id:
+        type: integer
+      phone:
+        type: string
+      postId:
+        type: integer
+      username:
+        type: string
+    required:
+    - id
     type: object
   result.Result:
     properties:
@@ -100,6 +126,84 @@ paths:
           schema:
             $ref: '#/definitions/result.Result'
       summary: 新增用户接口
+  /api/user:
+    get:
+      description: 查询用户接口
+      parameters:
+      - description: 用户名
+        in: query
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/result.Result'
+      summary: 查询用户接口
+  /api/user/{id}:
+    delete:
+      description: 删除用户接口
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/result.Result'
+      summary: 删除用户接口
+    put:
+      description: 更新用户接口
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateUserDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/result.Result'
+      summary: 更新用户接口
+  /api/user/list:
+    get:
+      description: 分页查询用户接口
+      parameters:
+      - description: 页码
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: 每页数量
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/result.Result'
+      summary: 分页查询用户接口
 securityDefinitions:
   ApiKeyAuth:
     in: header

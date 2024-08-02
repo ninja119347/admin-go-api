@@ -10,9 +10,9 @@ type LoginDto struct {
 
 // 创建用户对象
 type CreateUserDto struct {
-	ID       uint   `json:"id" validate:"required"`
+	ID       uint   `json:"id"`
 	PostId   int    `json:"postId" `
-	DepId    int    `json:"depId" `
+	DepId    int    `json:"deptId" `
 	Username string `json:"username" validate:"required"`
 	Password string `json:"password" validate:"required"`
 	Email    string `json:"email" validate:"required,email"`
@@ -23,7 +23,7 @@ type CreateUserDto struct {
 type UpdateUserDto struct {
 	ID       uint   `json:"id" validate:"required"`
 	PostId   int    `json:"postId"`
-	DepId    int    `json:"depId"`
+	DepId    int    `json:"deptId"`
 	Username string `json:"username"`
 	//TODO 可以单独做一个密码验证的方法
 	//Password string `json:"password" binding:"require"`

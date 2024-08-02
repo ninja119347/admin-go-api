@@ -10,7 +10,7 @@ type SysAdmin struct {
 	//gorm.Model
 	ID         uint       `json:"id" binding:"require" gorm:"column:id;comment:'主键'" `
 	PostId     int        `json:"postId" gorm:"column:post_id;comment:'岗位id';NOT NULL" `
-	DepId      int        `json:"depId" gorm:"column:dept_id;comment:'部门id';NOT NULL" `
+	DepId      int        `json:"deptId" gorm:"column:dept_id;comment:'部门id';NOT NULL" `
 	Username   string     `json:"username" gorm:"column:username;varchar(64);comment:'用户名';NOT NULL" `
 	Password   string     `json:"password" gorm:"column:password;varchar(64);comment:'密码';NOT NULL" `
 	Nickname   string     `json:"nickname" gorm:"column:nickname;varchar(64);comment:'昵称'" `

@@ -88,11 +88,136 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/user": {
+            "get": {
+                "description": "查询用户接口",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "查询用户接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "用户名",
+                        "name": "username",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/result.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/list": {
+            "get": {
+                "description": "分页查询用户接口",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "分页查询用户接口",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "每页数量",
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/result.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/{id}": {
+            "put": {
+                "description": "更新用户接口",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "更新用户接口",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "用户ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "data",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateUserDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/result.Result"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "删除用户接口",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "删除用户接口",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "用户ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/result.Result"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
         "dto.CreateUserDto": {
             "type": "object",
+            "required": [
+                "email",
+                "id",
+                "password",
+                "phone",
+                "username"
+            ],
             "properties": {
                 "depId": {
                     "type": "integer"
@@ -138,6 +263,33 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UpdateUserDto": {
+            "type": "object",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "depId": {
+                    "type": "integer"
+                },
+                "email": {
+                    "description": "TODO 可以单独做一个密码验证的方法\nPassword string ` + "`" + `json:\"password\" binding:\"require\"` + "`" + `",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "phone": {
+                    "type": "string"
+                },
+                "postId": {
+                    "type": "integer"
                 },
                 "username": {
                     "type": "string"

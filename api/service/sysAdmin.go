@@ -131,6 +131,7 @@ func (s SysAdminServiceImpl) UpdateUser(c *gin.Context, dto dto.UpdateUserDto) {
 // 实现查询分页查询用户接口
 func (s SysAdminServiceImpl) SearchUserList(c *gin.Context, page, pageSize int) {
 	//检验参数
+	log.Log().Info("page: ", page, "pageSize: ", pageSize)
 	if page < 0 || pageSize < 0 {
 		result.Failed(c, uint(result.ApiCode.ParamsFormError), result.ApiCode.GetMessage(result.ApiCode.ParamsFormError))
 		return

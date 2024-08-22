@@ -20,6 +20,8 @@ type Codes struct {
 	UserNotExist    uint
 	DeleteUserError uint
 	UpdateUserError uint
+	LoginOutOfTime  uint
+	APPNAMEERROR    uint
 }
 
 // ApiCode 状态码
@@ -40,12 +42,14 @@ var ApiCode = &Codes{
 	UserNotExist:    416,
 	DeleteUserError: 417,
 	UpdateUserError: 418,
+	LoginOutOfTime:  419,
+	APPNAMEERROR:    420,
 }
 
 func init() {
 	ApiCode.Message = map[uint]string{
-		ApiCode.SUCCESS:         "成功",
-		ApiCode.FAILED:          "失败",
+		ApiCode.SUCCESS:         "OK",
+		ApiCode.FAILED:          "FAILED",
 		ApiCode.NOAUTH:          "请求头中token为空",
 		ApiCode.AUTHFORM:        "请求头中token格式有误",
 		ApiCode.ParamsFormError: "参数格式出错",
@@ -60,6 +64,8 @@ func init() {
 		ApiCode.UserNotExist:    "用户不存在",
 		ApiCode.DeleteUserError: "删除用户失败",
 		ApiCode.UpdateUserError: "更新用户失败",
+		ApiCode.LoginOutOfTime:  "登录超时",
+		ApiCode.APPNAMEERROR:    "应用名称错误",
 	}
 }
 

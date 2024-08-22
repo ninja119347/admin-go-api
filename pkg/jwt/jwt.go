@@ -2,6 +2,7 @@
 package jwt
 
 import (
+	"admin-go-api/api/dto"
 	"admin-go-api/api/entity"
 	"admin-go-api/common/constant"
 	"errors"
@@ -17,7 +18,7 @@ type userStdClaims struct {
 }
 
 // token过期时间
-const TokenExpireDuration = time.Hour * 2
+//const TokenExpireDuration = time.Hour * 2
 
 // token密钥
 var Secret = []byte("admin-go-api")
@@ -28,24 +29,23 @@ var (
 )
 
 // 根据用户信息生成token
-func GenerateTokenByAdmin(admin entity.SysAdmin) (string, error) {
+func GenerateTokenByAdmin(admin dto.LoginDto) (string, int64, error) {
 	var JwtAdmin entity.JwtAdmin
-	JwtAdmin.ID = admin.ID
-	JwtAdmin.Username = admin.Username
-	JwtAdmin.Nickname = admin.Nickname
-	JwtAdmin.Icon = admin.Icon
-	JwtAdmin.Email = admin.Email
-	JwtAdmin.Phone = admin.Phone
-	JwtAdmin.Note = admin.Note
+	JwtAdmin.Id = admin.Id
+	JwtAdmin.App_name = admin.AppName
+	JwtAdmin.Id_type = admin.IdType
 	claims := userStdClaims{
 		JwtAdmin,
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(TokenExpireDuration).Unix(), // 过期时间
-			Issuer:    "admin",                                    //签发人
+			ExpiresAt: time.Now().Add(constant.TokenExpireDuration).Unix(), // 过期时间
+			Issuer:    "admin",                                             //签发人
+			IssuedAt:  time.Now().Unix(),                                   // 签发时间
+			NotBefore: time.Now().Unix(),                                   // 生效时间
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(Secret)
+	tokenString, err := token.SignedString(Secret)
+	return tokenString, claims.ExpiresAt, err
 }
 
 // 解析JWT(固定写法)
@@ -72,28 +72,28 @@ func ValidateToken(tokenString string) (*entity.JwtAdmin, error) {
 	return &claims.JwtAdmin, nil
 }
 
-// 获取当前登录用户id
-func GetAdminId(c *gin.Context) (uint, error) {
+// 获取当前登录appid
+func GetAdminId(c *gin.Context) (string, error) {
 	u, exit := c.Get(constant.ContexkeyUserObj)
 	if !exit {
-		return 0, errors.New("can't get user id")
+		return "", errors.New("can't get user id")
 	}
 	admin, ok := u.(*entity.JwtAdmin)
 	if ok {
-		return admin.ID, nil
+		return admin.Id, nil
 	}
-	return 0, errors.New("can't convert to id struct")
+	return "", errors.New("can't convert to id struct")
 }
 
-// 返回用户名
+// 返回app_name
 func GetAdminName(c *gin.Context) (string, error) {
 	u, exit := c.Get(constant.ContexkeyUserObj)
 	if !exit {
-		return "0", errors.New("can't get user name")
+		return "0", errors.New("can't get app name")
 	}
 	admin, ok := u.(*entity.JwtAdmin)
 	if ok {
-		return admin.Username, nil
+		return admin.App_name, nil
 	}
 	return "0", errors.New("can't convert to name struct")
 }

@@ -23,6 +23,7 @@ import (
 // @in header
 // @name Authorization
 func main() {
+	//fmt.Println("hello world")
 	log := log.Log()
 	gin.SetMode(config.Config.Server.Model)
 	router := router.InitRouter()

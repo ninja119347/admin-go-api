@@ -1,32 +1,25 @@
 package dto
 
+import "time"
+
 // 登陆对象
 type LoginDto struct {
-	Username string `json:"username" validate:"required"`
-	Password string `json:"password" validate:"required"`
-	Image    string `json:"image" validate:"required,min=4,max=6"` //验证码
-	IdKey    string `json:"idKey" validate:"required"`             //验证码id
+	AppName   string `json:"app_name" validate:"required"`   //app名称
+	Id        string `json:"id" validate:"required"`         //固定值223
+	IdType    string `json:"id_type" validate:"required"`    //Id类型
+	UltraData int64  `json:"ultra_data" validate:"required"` //附加数据
+	AppId     string `json:"app_id" validate:"required"`     //AppId
 }
 
-// 创建用户对象
-type CreateUserDto struct {
-	ID       uint   `json:"id"`
-	PostId   int    `json:"postId" `
-	DepId    int    `json:"deptId" `
-	Username string `json:"username" validate:"required"`
-	Password string `json:"password" validate:"required"`
-	Email    string `json:"email" validate:"required,email"`
-	Phone    string `json:"phone" validate:"required"`
+// 发送对象
+type SendDto struct {
+	Users []string          `json:"users" validate:"required,dive,email"` //目标用户邮箱
+	Bid   string            `json:"bid" validate:"required"`              //业务大类
+	Data  map[string]string `json:"data" validate:"required"`             //bid具体实现字段
 }
 
-// 更新用户对象
-type UpdateUserDto struct {
-	ID       uint   `json:"id" validate:"required"`
-	PostId   int    `json:"postId"`
-	DepId    int    `json:"deptId"`
-	Username string `json:"username"`
-	//TODO 可以单独做一个密码验证的方法
-	//Password string `json:"password" binding:"require"`
-	Email string `json:"email" validate:"email"`
-	Phone string `json:"phone"`
+// 检查 UtraData 是否过期的函数
+func (dto *LoginDto) IsUtraDataExpired() bool {
+	currentTimestamp := time.Now().Unix()
+	return currentTimestamp > dto.UltraData
 }

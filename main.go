@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-// @title admin-go-api
+// @title lenovo-email
 // @version 1.0
 // @description 后台管理系统API接口文档
 // @securityDefinitions.apikey ApiKeyAuth
